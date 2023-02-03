@@ -18,6 +18,7 @@
 # misc
 .DS_Store
 *.pem
+example.yml
 
 # debug
 npm-debug.log*
