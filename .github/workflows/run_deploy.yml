@@ -28,10 +28,9 @@ jobs:
       - uses: jsmrcaga/action-netlify-deploy@master
         with:
           working-directory: .next
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-project-id: ${{ secrets.VERCEL_ID }}
+          vercel-token: IprpDOC0Yk0E_F4p6FZd18aYcHEMJreBdc7A42uYWTg #${{ secrets.VERCEL_TOKEN }}
+          vercel-project-id: 54180b37-f404-4f03-8653-8d7766ae4bfe #${{ secrets.VERCEL_ID }}
           github-comment: "Prod deploy v${{ github.ref }}"
-          vercel-org-id: ${{ secrets.VERCEL_ORG }}
           
 
 # read more in: https://docs.github.com/es/actions
