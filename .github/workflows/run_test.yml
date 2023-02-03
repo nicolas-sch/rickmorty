@@ -19,9 +19,8 @@ jobs:
        - run: npm i --location=global yarn
        - run: yarn install --frozen-lockfile
 
-       - name: Unit Tests (using Jest)
-         run: yarn test
-
+       - name: UI-Unit Tests (using React-Testing Lib & Storybook)
+         run: yarn test:ui-jest 
 
 # usando npm en vez de yarn
 # unit-tests:
