@@ -27,10 +27,13 @@ jobs:
       - uses: nelonoel/branch-name@v1.0.1
       - uses: jsmrcaga/action-netlify-deploy@master
         with:
-          working-directory: .next
-          vercel-token: IprpDOC0Yk0E_F4p6FZd18aYcHEMJreBdc7A42uYWTg #${{ secrets.VERCEL_TOKEN }}
-          vercel-project-id: 54180b37-f404-4f03-8653-8d7766ae4bfe #${{ secrets.VERCEL_ID }}
-          github-comment: "Prod deploy v${{ github.ref }}"
-          
+          # working-directory: .next
+          # vercel-token: IprpDOC0Yk0E_F4p6FZd18aYcHEMJreBdc7A42uYWTg #${{ secrets.VERCEL_TOKEN }}
+          # vercel-project-id: 54180b37-f404-4f03-8653-8d7766ae4bfe #${{ secrets.VERCEL_ID }}
+          build_directory: .next
+          NETLIFY_AUTH_TOKEN: IprpDOC0Yk0E_F4p6FZd18aYcHEMJreBdc7A42uYWTg #${{ secrets.NETLIFY_TOKEN }}
+          NETLIFY_SITE_ID: 54180b37-f404-4f03-8653-8d7766ae4bfe #${{ secrets.NETLIFY_ID }}
+          NETLIFY_DEPLOY_MESSAGE: "Prod deploy v${{ github.ref }}"
+          NETLIFY_DEPLOY_TO_PROD: true        
 
 # read more in: https://docs.github.com/es/actions
