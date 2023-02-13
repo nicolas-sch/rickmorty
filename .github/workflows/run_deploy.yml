@@ -23,17 +23,24 @@ jobs:
       - run: npm i --location=global yarn
       - run: yarn install --frozen-lockfile
       - run: yarn build
-      # Sets the branch name as environment variable
-      - uses: nelonoel/branch-name@v1.0.1
-      - uses: jsmrcaga/action-netlify-deploy@master
+
+      - uses: amondnet/vercel-action@v20 
         with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }} 
+          vercel-org-id: ${{ secrets.ORG_ID}}  
+          vercel-project-id: ${{ secrets.VERCEL_ID }}
+      # Sets the branch name as environment variable
+     # - uses: nelonoel/branch-name@v1.0.1
+     # - uses: jsmrcaga/action-netlify-deploy@master
+       # with:
           # working-directory: .next
-          # vercel-token: IprpDOC0Yk0E_F4p6FZd18aYcHEMJreBdc7A42uYWTg #${{ secrets.VERCEL_TOKEN }}
-          # vercel-project-id: 54180b37-f404-4f03-8653-8d7766ae4bfe #${{ secrets.VERCEL_ID }}
-          build_directory: .next
-          NETLIFY_AUTH_TOKEN: IprpDOC0Yk0E_F4p6FZd18aYcHEMJreBdc7A42uYWTg #${{ secrets.NETLIFY_TOKEN }}
-          NETLIFY_SITE_ID: 54180b37-f404-4f03-8653-8d7766ae4bfe #${{ secrets.NETLIFY_ID }}
-          NETLIFY_DEPLOY_MESSAGE: "Prod deploy v${{ github.ref }}"
-          NETLIFY_DEPLOY_TO_PROD: true        
+          # vercel-token:  #${{ secrets.VERCEL_TOKEN }}
+          # vercel-org-id: ${{ secrets.ORG_ID}}  
+          # vercel-project-id: #${{ secrets.VERCEL_ID }}
+        #  build_directory: .next
+        #  NETLIFY_AUTH_TOKEN:  #${{ secrets.NETLIFY_TOKEN }}
+        #  NETLIFY_SITE_ID: #${{ secrets.NETLIFY_ID }}
+        #  NETLIFY_DEPLOY_MESSAGE: "Prod deploy v${{ github.ref }}"
+        #  NETLIFY_DEPLOY_TO_PROD: true        
 
 # read more in: https://docs.github.com/es/actions
