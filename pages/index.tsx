@@ -1,65 +1,102 @@
-import Head from 'next/head'
-import Image from 'next/image'
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Container, Card, CardImage, CardContent, CardTitle, PaginationContainer, PaginationButton, PageContainer, Heading } from "../styles/Index";
+import Modal from '../components/Modal';
 
-import styles from '@/pages/index.module.css'
+type Character = {
+  id: number;
+  name: string;
+  species: string;
+  status: string;
+  image: string;
+};
 
 export default function Home() {
+  const [characters, setCharacters] = useState<Character[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedCharacterId, setSelectedCharacterId] = useState<number | null>(null);
+  const [showModal, setShowModal] = useState(false);
+
+  const fetchCharacters = async () => {
+    const cachedData = localStorage.getItem(`characters-page-${currentPage}`);
+    if (cachedData) {
+      setCharacters(JSON.parse(cachedData));
+      return;
+    }
+  
+    const response = await axios.get(`https://rickandmortyapi.com/api/character?page=${currentPage}`);
+    setCharacters(response.data.results);
+  
+    localStorage.setItem(`characters-page-${currentPage}`, JSON.stringify(response.data.results));
+  };
+  
+  useEffect(() => {
+    fetchCharacters();
+  }, [currentPage]);
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage(currentPage + 1);
+  };
+
+  const handleCharacterClick = (id: number) => {
+    setSelectedCharacterId(id);
+    setShowModal(true);
+  };
+
+  const handleModalClose = () => {
+    setSelectedCharacterId(null);
+    setShowModal(false);
+  };
+
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing <code>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
+    <>
+      <PageContainer>
+        <Heading>Lista de personajes</Heading>
+        <Container>
+          {characters.map((character: Character) => (
+            <Card key={character.id} onClick={() => handleCharacterClick(character.id)}>
+              <CardImage src={character.image} alt={character.name} />
+              <CardContent>
+                <CardTitle>{character.name}</CardTitle>
+              </CardContent>
+            </Card>
+            
+          ))}
+        </Container>
+        <PaginationContainer>
+          <PaginationButton
+            disabled={currentPage === 1}
+            onClick={handlePrevPage}
           >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a href="https://vercel.com/new" className={styles.card}>
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
-    </div>
-  )
+            Previous
+          </PaginationButton>
+          <PaginationButton
+            onClick={handleNextPage}
+          >
+            Next
+          </PaginationButton>
+        </PaginationContainer>
+      </PageContainer>
+      <Modal
+        title="Detalle del personaje"
+        isOpen={showModal}
+        onClose={handleModalClose}
+      >
+        {selectedCharacterId && (
+          <div>
+            <img src={characters.find((character) => character.id === selectedCharacterId)?.image} alt={characters.find((character) => character.id === selectedCharacterId)?.name} />
+            <p>Nombre: {characters.find((character) => character.id === selectedCharacterId)?.name}</p>
+            <p>Especie: {characters.find((character) => character.id === selectedCharacterId)?.species}</p>
+            <p>Estatus: {characters.find((character) => character.id === selectedCharacterId)?.status}</p>
+          </div>
+        )}
+      </Modal>
+    </>
+  );
 }
